@@ -22,7 +22,11 @@ libraryDependencies ++= Seq(
 
 enablePlugins(DockerPlugin)
 
+// release sbt plugin values 
 skip in publish := true
+releaseIgnoreUntrackedFiles := true
+
+
 // remove application.conf
 mappings in(Compile, packageBin) ~= {
   _.filterNot {
