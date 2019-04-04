@@ -3,7 +3,7 @@ import sbt.Keys.mappings
 
 name := "iotKafkaAirLightTemp"
 
-version := "0.1"
+version := "0.2.2"
 
 scalaVersion := "2.12.7"
 
@@ -44,19 +44,7 @@ assemblyMergeStrategy in assembly := {
 }
 
 
-// build the docker image
 
-/*
-1-change the version number
-2-sbt assembly
-3-sbt docker:publishLocal
-4-docker save -o iotkafkaairlighttemp.tar iotkafkaairlighttemp:latest
-5-scp iotkafkaairlighttemp.tar appuser@intel-server-02:/home/appuser/
-6-sudo docker load -i iotkafkaairlighttemp.tar
-7-sudo docker run -m 500m --network=host -e TOPIC_START=latest -d iotkafkaairlighttemp:latest
---host networking needed for DNS resolution
---sudo not needed if docker is configured right
- */
 
 dockerBuildOptions += "--no-cache"
 dockerUpdateLatest := true
