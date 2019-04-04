@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
 
 enablePlugins(DockerPlugin)
 
+skip in publish := true
 // remove application.conf
 mappings in(Compile, packageBin) ~= {
   _.filterNot {
