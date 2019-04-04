@@ -25,6 +25,7 @@ enablePlugins(DockerPlugin)
 // release sbt plugin values 
 skip in publish := true
 releaseIgnoreUntrackedFiles := true
+publishArtifact := false
 
 
 // remove application.conf
