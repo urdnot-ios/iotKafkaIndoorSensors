@@ -1,46 +1,63 @@
 import com.typesafe.sbt.packager.docker._
 import sbt.Keys.mappings
 
-name := "iotKafkaAirLightTemp"
+organization := "com.urdnot.iot"
 
-version := "0.2.2"
+name := "iotKafkaIndoorSensors"
 
-scalaVersion := "2.12.7"
+// Docker image name:
+packageName := s"${name.value.toLowerCase}"
 
-// needed for the fat jar
-mainClass in assembly := Some("com.urdnot.iot.KafkaReader")
+version := "2.0.1"
 
-libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream-kafka" % "1.0-RC1",
-  "com.typesafe.play" %% "play" % "2.6.15",
-  "com.typesafe.akka" %%"akka-http" % "10.1.7",
-  "com.paulgoldbaum" %% "scala-influxdb-client" % "0.6.1",
-  "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.0",
-  "org.scalatest" % "scalatest_2.12" % "3.0.5" % "test"
-)
+val scalaMajorVersion = "2.13"
+val scalaMinorVersion = "2"
+
+scalaVersion := scalaMajorVersion.concat("." + scalaMinorVersion)
+
+
+libraryDependencies ++= {
+  val sprayJsonVersion = "1.3.5"
+  val circeVersion = "0.12.3"
+  val logbackClassicVersion = "1.2.3"
+  val scalatestVersion = "3.1.1"
+  val akkaVersion = "2.5.30"
+  val AkkaHttpVersion = "10.2.0"
+  val scalaLoggingVersion = "3.9.2"
+  val akkaStreamKafkaVersion = "2.0.4"
+  val testContainersVersion = "1.12.4"
+
+  Seq(
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-stream-kafka" % akkaStreamKafkaVersion,
+    "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+    "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+    "com.lightbend.akka" %% "akka-stream-alpakka-influxdb" % "2.0.1",
+    "io.spray" %% "spray-json" % sprayJsonVersion,
+    "ch.qos.logback" % "logback-classic" % logbackClassicVersion,
+    "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
+    "io.circe" %% "circe-core" % circeVersion,
+    "io.circe" %% "circe-generic" % circeVersion,
+    "io.circe" %% "circe-parser" % circeVersion,
+    "io.circe" %% "circe-optics" % "0.12.0",
+    "org.scalatest" %% "scalatest" % scalatestVersion % Test,
+    "org.testcontainers" % "kafka" %  testContainersVersion % Test,
+    "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
+  )
+}
 
 enablePlugins(DockerPlugin)
+mainClass := Some(s"${organization.value}.IndoorSensors.DataReader")
+mainClass in (Compile, assembly) := Some(s"${mainClass.value}")
 
-// release sbt plugin values 
-skip in publish := true
-releaseIgnoreUntrackedFiles := true
-publishArtifact := false
+assemblyJarName := s"${name.value}.v${version.value}.jar"
+val meta = """META.INF(.)*""".r
 
-
-// remove application.conf
 mappings in(Compile, packageBin) ~= {
   _.filterNot {
     case (_, name) => Seq("application.conf").contains(name)
   }
 }
-// name the assembly jar
-// remember to add the static name to the run-app.sh
-
-assemblyJarName := s"${name.value}.v${version.value}.jar"
-
-// remove other application.confs, properties, reference files from the fat jar
-val meta = """META.INF(.)*""".r
 assemblyMergeStrategy in assembly := {
   case n if n.endsWith(".properties") => MergeStrategy.concat
   case PathList("reference.conf") => MergeStrategy.concat
@@ -49,22 +66,18 @@ assemblyMergeStrategy in assembly := {
   case x => MergeStrategy.first
 }
 
-
-
-
 dockerBuildOptions += "--no-cache"
 dockerUpdateLatest := true
-dockerPackageMappings in Docker += file(s"target/scala-2.12/${assemblyJarName.value}") -> s"opt/docker/${assemblyJarName.value}"
-mappings in Docker += file("bin/run-app.sh") -> "opt/docker/run-app.sh"
+dockerPackageMappings in Docker += file(s"target/scala-2.13/${assemblyJarName.value}") -> s"opt/docker/${assemblyJarName.value}"
 mappings in Docker += file("src/main/resources/application.conf") -> "opt/docker/application.conf"
+mappings in Docker += file("src/main/resources/logback.xml") -> "opt/docker/logback.xml"
+
 dockerCommands := Seq(
-  Cmd("FROM", "java:8"),
-  Cmd("FROM", "anapsix/alpine-java"),
-  Cmd("COPY", s"opt/docker/${assemblyJarName.value}", "/home/appuser/lib/iotKafkaAirLightTemp.jar"),
-  Cmd("COPY", "opt/docker/run-app.sh", "/var/run-app.sh"),
+  Cmd("FROM", "openjdk:11-jdk-slim"),
+  Cmd("LABEL", s"""MAINTAINER="Jeffrey Sewell""""),
+  Cmd("COPY", s"opt/docker/${assemblyJarName.value}", s"/opt/docker/${assemblyJarName.value}"),
   Cmd("COPY", "opt/docker/application.conf", "/var/application.conf"),
-  Cmd("USER", "root"),
-  Cmd("ENV", "JAVA_OPTS=\"-Xmx4G -Xms1G -XX:+UseG1GC\""),
-  Cmd("RUN", "chmod 0544 /var/run-app.sh"),
-  Cmd("ENTRYPOINT", "/var/run-app.sh")
+  Cmd("COPY", "opt/docker/logback.xml", "/var/logback.xml"),
+  Cmd("ENV", "CLASSPATH=/opt/docker/application.conf:/opt/docker/logback.xml"),
+  Cmd("ENTRYPOINT", s"java -cp /opt/docker/${assemblyJarName.value} ${mainClass.value.get}")
 )
