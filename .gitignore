@@ -36,7 +36,6 @@ src/main/.DS_Store
 src/main/scala/.DS_Store
 src/main/scala/com/.DS_Store
 src/main/scala/com/urdnot/.DS_Store
-src/test/
 target/.history
 target/docker/
 target/scala-2.12/
