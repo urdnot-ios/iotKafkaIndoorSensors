@@ -73,31 +73,31 @@ object DataProcessor extends DataStructures {
                 case _ => None
               },
               si1145 = root.SI1145.json.getOption(x) match {
-                case Some(_) => Some(Si1145(
+                case Some(_) => Some(indoorSI2245(
                   Vis = root.SI1145.Vis.int.getOption(x),
                   IR = root.SI1145.IR.int.getOption(x),
                   UV = root.SI1145.UV.double.getOption(x)))
                 case _ => None
               },
               ccs811 = root.ccs811.json.getOption(x) match {
-                case Some(_) => Some(Ccs811(
+                case Some(_) => Some(indoorCcs811(
                   co2 = root.ccs811.co2.int.getOption(x),
                   voc = root.ccs811.voc.int.getOption(x)))
                 case _ => None
               },
               sgp30 = root.SGP30.json.getOption(x) match {
-                case Some(_) => Some(Sgp30(
+                case Some(_) => Some(indoorSGP30(
                   TVOCPPB = root.SGP30.TVOCPPB.int.getOption(x),
                   eCO2PPM = root.SGP30.eCO2PPM.int.getOption(x)))
                 case _ => None
               },
               tsl2561 = root.TSL2561.json.getOption(x) match {
-                case Some(_) => Some(Tsl2561(
+                case Some(_) => Some(indoorTsl2561(
                   lux = root.TSL2561.lux.double.getOption(x)))
                 case _ => None
               },
               tsl2591 = root.TSL2591.json.getOption(x) match {
-                case Some(_) => Some(Tsl2591(
+                case Some(_) => Some(indoorTsl2591(
                   Vis = root.TSL2591.Vis.int.getOption(x),
                   IR = root.TSL2591.IR.int.getOption(x)))
               case _ => None

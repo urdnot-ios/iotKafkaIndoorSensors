@@ -1,8 +1,11 @@
 #!/bin/zsh
 
 # did you change the version number?
-docker image tag indoorsensors:latest intel-server-03:5000/indoorsensors
-docker image push intel-server-03:5000/indoorsensors
+sbt clean
+sbt assembly
+sbt docker:publishLocal
+docker image tag iotkafkaindoorsensors:latest intel-server-03:5000/iotkafkaindoorsensors
+docker image push intel-server-03:5000/iotkafkaindoorsensors
 
 # Server side:
 # kubectl apply -f /home/appuser/deployments/indoorSensors.yaml

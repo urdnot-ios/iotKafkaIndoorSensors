@@ -5,7 +5,7 @@ trait DataStructures {
   /**
    * Master class of the different sensors. Host and timestamp are mandatory.
    *
-   * @param host
+   * @param host The Hostname of the device that originated the data
    * @param timestamp
    * @param bmp280
    * @param bme280
@@ -21,11 +21,11 @@ trait DataStructures {
                                 bmp280: Option[IndoorBmp280],
                                 bme280: Option[IndoorBme280],
                                 bme680: Option[IndoorBme680],
-                                si1145: Option[Si1145],
-                                ccs811: Option[Ccs811],
-                                sgp30: Option[Sgp30],
-                                tsl2561: Option[Tsl2561],
-                                tsl2591: Option[Tsl2591]
+                                si1145: Option[indoorSI2245],
+                                ccs811: Option[indoorCcs811],
+                                sgp30: Option[indoorSGP30],
+                                tsl2561: Option[indoorTsl2561],
+                                tsl2591: Option[indoorTsl2591]
                                )
 
   /**
@@ -148,13 +148,13 @@ trait DataStructures {
     }
   }
 
-  final case class Si1145(
+  final case class indoorSI2245(
                            Vis: Option[Int] = None,
                            IR: Option[Int] = None,
                            UV: Option[Double] = None
                          ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${Si1145.this.getClass.getSimpleName},host=${host},sensor=${Si1145.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorSI2245.this.getClass.getSimpleName},host=${host},sensor=${indoorSI2245.this.getClass.getSimpleName} """ + List(
         Vis match {
           case Some(i) => "Vis=" + i.toString
           case None => ""
@@ -171,12 +171,12 @@ trait DataStructures {
     }
   }
 
-  final case class Ccs811(
+  final case class indoorCcs811(
                            co2: Option[Int] = None,
                            voc: Option[Int] = None
                          ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${Ccs811.this.getClass.getSimpleName},host=${host},sensor=${Ccs811.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorCcs811.this.getClass.getSimpleName},host=${host},sensor=${indoorCcs811.this.getClass.getSimpleName} """ + List(
         co2 match {
           case Some(i) => "co2=" + i.toString
           case None => ""
@@ -189,12 +189,12 @@ trait DataStructures {
     }
   }
 
-  final case class Sgp30(
+  final case class indoorSGP30(
                           TVOCPPB: Option[Int] = None,
                           eCO2PPM: Option[Int] = None
                         ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${Sgp30.this.getClass.getSimpleName},host=${host},sensor=${Sgp30.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorSGP30.this.getClass.getSimpleName},host=${host},sensor=${indoorSGP30.this.getClass.getSimpleName} """ + List(
         TVOCPPB match {
           case Some(i) => "TVOCPPB=" + i.toString
           case None => ""
@@ -207,11 +207,11 @@ trait DataStructures {
     }
   }
 
-  final case class Tsl2561(
+  final case class indoorTsl2561(
                             lux: Option[Double] = None
                           ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${Tsl2561.this.getClass.getSimpleName},host=${host},sensor=${Tsl2561.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorTsl2561.this.getClass.getSimpleName},host=${host},sensor=${indoorTsl2561.this.getClass.getSimpleName} """ + List(
         lux match {
           case Some(i) => "lux=" + i.toString
           case None => ""
@@ -220,12 +220,12 @@ trait DataStructures {
     }
   }
 
-  final case class Tsl2591(
+  final case class indoorTsl2591(
                             Vis: Option[Int] = None,
                             IR: Option[Int] = None
                           ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${Tsl2591.this.getClass.getSimpleName},host=${host},sensor=${Tsl2591.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorTsl2591.this.getClass.getSimpleName},host=${host},sensor=${indoorTsl2591.this.getClass.getSimpleName} """ + List(
         Vis match {
           case Some(i) => "Vis=" + i.toString
           case None => ""
