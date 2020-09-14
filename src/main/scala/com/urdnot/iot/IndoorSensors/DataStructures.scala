@@ -1,21 +1,24 @@
 package com.urdnot.iot.IndoorSensors
 
 trait DataStructures {
+  val msZeros: String = "000"
+  val nsZeros: String = "000000000"
 
   /**
    * Master class of the different sensors. Host and timestamp are mandatory.
    *
    * @param host The Hostname of the device that originated the data
-   * @param timestamp
-   * @param bmp280
-   * @param bme280
-   * @param bme680
-   * @param si1145
-   * @param ccs811
-   * @param sgp30
-   * @param tsl2561
-   * @param tsl2591
+   * @param timestamp The timestamp provided by the source system, usually in seconds
+   * @param bmp280 data from the bmp280 temperature and pressure sensor
+   * @param bme280 data from the bme280 sensor
+   * @param bme680 data from the bme680 sensor
+   * @param si1145 data from the si1145 sensor
+   * @param ccs811 data from the ccs811 sensor
+   * @param sgp30 data from the sgp30 sensor
+   * @param tsl2561 data from the tsl2561 sensor
+   * @param tsl2591 data from the tsl2591 sensor
    */
+
   final case class IndoorSensor(host: String,
                                 timestamp: Long,
                                 bmp280: Option[IndoorBmp280],
@@ -33,11 +36,11 @@ trait DataStructures {
    * Insertion into InfluxDB, following the pattern of "toString." Any changes to the Influx structure must be made here.
    * The Influx pattern is: Measurement,field=value,field=value tag=value,tag=value timestamp
    * Spaces and commas and = signs all matter
-   * @param tempC
-   * @param tempF
-   * @param pressurePa
-   * @param pressureInHg
-   * @param altitudeM
+   * @param tempC Temperature in Celsius
+   * @param tempF Temperature in Fahrenheit
+   * @param pressurePa Pressure in Pascales
+   * @param pressureInHg Pressure in Inches of Mercury
+   * @param altitudeM Altitude in Meters
    */
   final case class IndoorBmp280(
                            tempC: Option[Double] = None,
@@ -47,7 +50,7 @@ trait DataStructures {
                            altitudeM: Option[Double] = None
                          ) {
      def toInfluxString(host: String, timestamp: Long): Option[String] = {
-       Some(s"""${IndoorBmp280.this.getClass.getSimpleName},host=${host},sensor=${IndoorBmp280.this.getClass.getSimpleName} """ + List(
+       Some(s"""${IndoorBmp280.this.getClass.getSimpleName},host=$host,sensor=${IndoorBmp280.this.getClass.getSimpleName} """ + List(
          altitudeM match {
            case Some(i) => "altitudeM=" + i.toString
            case None => ""
@@ -68,7 +71,7 @@ trait DataStructures {
            case Some(i) => "tempF=" + i.toString
            case None => ""
          }
-       ).mkString(",") + " " + timestamp.toString + "000")
+       ).mkString(",") + " " + timestamp.toString + msZeros)
      }
   }
 
@@ -80,7 +83,7 @@ trait DataStructures {
                            altitudeM: Option[Double] = None
                          ) {
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${IndoorBme280.this.getClass.getSimpleName},host=${host},sensor=${IndoorBme280.this.getClass.getSimpleName} """ + List(
+      Some(s"""${IndoorBme280.this.getClass.getSimpleName},host=$host,sensor=${IndoorBme280.this.getClass.getSimpleName} """ + List(
           altitudeM match {
             case Some(i) => "altitudeM=" + i.toString
             case None => ""
@@ -101,7 +104,7 @@ trait DataStructures {
             case Some(i) => "tempF=" + i.toString
             case None => ""
           }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -115,7 +118,7 @@ trait DataStructures {
                            humidity: Option[Double] = None
                          ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${IndoorBme680.this.getClass.getSimpleName},host=${host},sensor=${IndoorBme680.this.getClass.getSimpleName} """ + List(
+      Some(s"""${IndoorBme680.this.getClass.getSimpleName},host=$host,sensor=${IndoorBme680.this.getClass.getSimpleName} """ + List(
         tempC match {
           case Some(i) => "tempC=" + i.toString
           case None => ""
@@ -144,7 +147,7 @@ trait DataStructures {
           case Some(i) => "humidity=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -154,7 +157,7 @@ trait DataStructures {
                            UV: Option[Double] = None
                          ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${indoorSI2245.this.getClass.getSimpleName},host=${host},sensor=${indoorSI2245.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorSI2245.this.getClass.getSimpleName},host=$host,sensor=${indoorSI2245.this.getClass.getSimpleName} """ + List(
         Vis match {
           case Some(i) => "Vis=" + i.toString
           case None => ""
@@ -167,7 +170,7 @@ trait DataStructures {
           case Some(i) => "UV=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -176,7 +179,7 @@ trait DataStructures {
                            voc: Option[Int] = None
                          ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${indoorCcs811.this.getClass.getSimpleName},host=${host},sensor=${indoorCcs811.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorCcs811.this.getClass.getSimpleName},host=$host,sensor=${indoorCcs811.this.getClass.getSimpleName} """ + List(
         co2 match {
           case Some(i) => "co2=" + i.toString
           case None => ""
@@ -185,7 +188,7 @@ trait DataStructures {
           case Some(i) => "voc=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -194,7 +197,7 @@ trait DataStructures {
                           eCO2PPM: Option[Int] = None
                         ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${indoorSGP30.this.getClass.getSimpleName},host=${host},sensor=${indoorSGP30.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorSGP30.this.getClass.getSimpleName},host=$host,sensor=${indoorSGP30.this.getClass.getSimpleName} """ + List(
         TVOCPPB match {
           case Some(i) => "TVOCPPB=" + i.toString
           case None => ""
@@ -203,7 +206,7 @@ trait DataStructures {
           case Some(i) => "eCO2PPM=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -211,12 +214,12 @@ trait DataStructures {
                             lux: Option[Double] = None
                           ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${indoorTsl2561.this.getClass.getSimpleName},host=${host},sensor=${indoorTsl2561.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorTsl2561.this.getClass.getSimpleName},host=$host,sensor=${indoorTsl2561.this.getClass.getSimpleName} """ + List(
         lux match {
           case Some(i) => "lux=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
@@ -225,7 +228,7 @@ trait DataStructures {
                             IR: Option[Int] = None
                           ){
     def toInfluxString(host: String, timestamp: Long): Option[String] = {
-      Some(s"""${indoorTsl2591.this.getClass.getSimpleName},host=${host},sensor=${indoorTsl2591.this.getClass.getSimpleName} """ + List(
+      Some(s"""${indoorTsl2591.this.getClass.getSimpleName},host=$host,sensor=${indoorTsl2591.this.getClass.getSimpleName} """ + List(
         Vis match {
           case Some(i) => "Vis=" + i.toString
           case None => ""
@@ -234,7 +237,7 @@ trait DataStructures {
           case Some(i) => "IR=" + i.toString
           case None => ""
         },
-      ).mkString(",") + " " + timestamp.toString + "000")
+      ).mkString(",") + " " + timestamp.toString + msZeros)
     }
   }
 
