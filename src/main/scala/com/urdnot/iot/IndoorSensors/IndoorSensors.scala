@@ -57,12 +57,13 @@ object IndoorSensors
                   dataList.foreach { dataOptional: Option[String] =>
                     dataOptional match {
                       case Some(data) =>
+                        println(data)
                         Http().singleRequest(HttpRequest(
                           method = HttpMethods.POST,
                           uri = Uri(INFLUX_URL).withQuery(
                             Query(
                               "bucket" -> INFLUX_DB,
-                              "precision" -> "ns"
+                              "precision" -> "ms"
                             )
                           ),
                           headers = Seq(

@@ -60,9 +60,9 @@ class ParseJsonSuite extends AsyncFlatSpec with DataStructures {
   )
   val validInfluxReplyHuzzah01_1 = List(
     None, None, None, None,
-    Some("IndoorBmp280,host=huzzah01,sensor=IndoorBmp280 altitudeM=26.02,pressureInHg=29.83,pressurePa=101012.81,tempC=24.73,tempF=76.51 15994551450000"),
-    Some("indoorSGP30,host=huzzah01,sensor=indoorSGP30 TVOCPPB=448,eCO2PPM=726 15994551450000"),
-    Some("indoorSI2245,host=huzzah01,sensor=indoorSI2245 Vis=261,IR=254,UV=0.02 15994551450000")
+    Some("IndoorBmp280,host=huzzah01,sensor=IndoorBmp280 altitudeM=26.02,pressureInHg=29.83,pressurePa=101012.81,tempC=24.73,tempF=76.51 1599455145000"),
+    Some("indoorSGP30,host=huzzah01,sensor=indoorSGP30 TVOCPPB=448,eCO2PPM=726 1599455145000"),
+    Some("indoorSI2245,host=huzzah01,sensor=indoorSI2245 Vis=261,IR=254,UV=0.02 1599455145000")
   )
 
   val errorReply = Left("""expected : got 'host":...' (line 1, column 25)""")

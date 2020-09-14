@@ -68,7 +68,7 @@ trait DataStructures {
            case Some(i) => "tempF=" + i.toString
            case None => ""
          }
-       ).mkString(",") + " " + timestamp.toString + "0000")
+       ).mkString(",") + " " + timestamp.toString + "000")
      }
   }
 
@@ -101,7 +101,7 @@ trait DataStructures {
             case Some(i) => "tempF=" + i.toString
             case None => ""
           }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -144,7 +144,7 @@ trait DataStructures {
           case Some(i) => "humidity=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -167,7 +167,7 @@ trait DataStructures {
           case Some(i) => "UV=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -185,7 +185,7 @@ trait DataStructures {
           case Some(i) => "voc=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -203,7 +203,7 @@ trait DataStructures {
           case Some(i) => "eCO2PPM=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -216,7 +216,7 @@ trait DataStructures {
           case Some(i) => "lux=" + i.toString
           case None => ""
         }
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
@@ -234,7 +234,7 @@ trait DataStructures {
           case Some(i) => "IR=" + i.toString
           case None => ""
         },
-      ).mkString(",") + " " + timestamp.toString + "0000")
+      ).mkString(",") + " " + timestamp.toString + "000")
     }
   }
 
